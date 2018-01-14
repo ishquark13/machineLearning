@@ -3,13 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pylab import *
 
-def assignment01():
-
-	''' Assignment 01 for Introduction to Machine Learning, Sp 2018
-		Introduction to Python and Git assignment
-	''' 
-
-
 '''
 Git tutorial
 git init
@@ -77,6 +70,16 @@ print(np.shape(test_comp))
 
 
 
+ 
+
+###### PART TWO ########
+print(np.amax(test))
+print(np.amin(test))
+
+test_norm2 = (test_sub - np.amin(test)) / np.amax(test)
+print(test_norm2)
+
+##### ADD SUBPLOTS #####
 fig               = plt.figure()
 
 fig.subplots_adjust(hspace=.5)
@@ -87,13 +90,9 @@ plt.subplot(3,1,2)
 plt.title('Mean-subtracted Data')
 plt.scatter(test_sub[:,0], test_sub[:,1])
 plt.subplot(3,1,3)
-plt.title('Normalized Data')
-plt.scatter(test_comp[:,0], test_comp[:,1])
+plt.title('Normalized Data 2')
+plt.scatter(test_norm2[:,0], test_norm2[:,1])
 plt.show()
 
 
-###### PART TWO ########
-
-
-if __name__ == '__main__':
-	assignment01()
+##### FINITO ###########
