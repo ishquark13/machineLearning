@@ -1,3 +1,8 @@
+''' Adding this comment as
+a proof that my terminal is able 
+to push to github properly
+'''
+
 import math 
 import numpy as np
 import matplotlib.pyplot as plt
