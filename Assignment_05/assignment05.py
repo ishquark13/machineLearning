@@ -158,6 +158,7 @@ PCA_seeds_dim2 = PCA(seeds, corr_seeds,2)
 Plot_PCA_2(PCA_G1_dim2, G1_labels)
 Plot_PCA_1(PCA_G1_dim1, G1_labels)
 Plot_PCA_1(PCA_G2_dim1, G2_labels)
+'''
 Plot_PCA_2(PCA_G2_dim2, G2_labels)
 Plot_PCA_1(PCA_G3_dim1, G3_labels)
 Plot_PCA_2(PCA_G3_dim2, G3_labels)
@@ -168,7 +169,7 @@ Plot_PCA_2(PCA_swiss_dim2, swiss_labels)
 Plot_PCA_1(PCA_seeds_dim1, seeds_labels)
 Plot_PCA_2(PCA_seeds_dim2, seeds_labels)
 
-
+'''
 
 
 

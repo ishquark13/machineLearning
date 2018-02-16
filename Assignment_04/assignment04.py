@@ -34,7 +34,7 @@ for i in range(0,len(data)):
 	result1.append(mu_o)
 	result2.append(sigma_o)
 
-	print('MLE:' + str(sum(result0)/len(result0)))
+	print('MLE:' + str(sum(result0)/len(result0)))	
 	print('MAP:' + str(mu_n))
 	mu_o      = mu_n
 	sigma_o   = sigma_n
@@ -42,7 +42,7 @@ for i in range(0,len(data)):
 	# mu_o      = mu_n
 	# sigma_o   = sigma_n
 
-'''
+'''\=
 #subplot on different axes
 plt.figure(1)
 plt.plot(result1)
