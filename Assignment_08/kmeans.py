@@ -28,7 +28,7 @@ def KMeans(X, C, flag):
                     plt.scatter(centers[j,0],centers[j,1],c=colors[j],marker='x', s=200)
                     plt.show()
                 plt.title("K-Means - Iteration: "+str(iter))
-                plt.pause(0.5) 
+                plt.pause(2.5) 
             else:
                 plt.cla()
                 for j in range(C):
@@ -36,7 +36,7 @@ def KMeans(X, C, flag):
                     plt.scatter(centers[j,0],centers[j,1],c='k',marker='x', s=200)
                     plt.show()
                 plt.title("K-Means - Iteration: "+str(iter))
-                plt.pause(0.5)
+                plt.pause(2.5)
         	    
         #Update cluster centers
         centersPrev = centers.copy()

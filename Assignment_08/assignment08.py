@@ -85,15 +85,15 @@ def RunPCM(data, labels, n_clusters, m, eta, name):
 
 #%% Run K-Means
 
-RunKMeans(data=X1, labels=labels1, n_clusters=3, name="Data Set X1", display=1)
+RunKMeans(data=X1, labels=labels1, n_clusters=3, name="Data Set X2", display=1)
 
 
 #%% Run Fuzzy C-Means (FCM)
 
-RunFCM(data=X4, labels=labels4, n_clusters=5, m=2, name="Data Set X4")
+RunFCM(data=X4, labels=labels4, n_clusters=3, m=5, name="Data Set X1")
 
 
 #%% Run Possibilistic C-Means (PCM)
 
-RunPCM(data=X6, labels=labels6, n_clusters=2, m=1.1, eta=0.5, name="Data Set X6")
+RunPCM(data=X1, labels=labels1, n_clusters=2, m=2.5, eta=0.5, name="Data Set X1")
 
