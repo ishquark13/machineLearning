@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy as sp
+from math import sqrt
 
 from ReadData import ReadData
 from ExtractSamples import ExtractSamples
