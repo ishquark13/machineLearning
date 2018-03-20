@@ -162,3 +162,91 @@ def cmeans(data, c, m=2, error=1e-3, maxiter=300, init=None, seed=None):
 
     return cntr, u  
 
+def cmeans_predict(test_data, cntr_trained, m, error, maxiter, metric='euclidean', init=None,
+                   seed=None):
+    """
+    Prediction of new data in given a trained fuzzy c-means framework [1].
+    Parameters
+    ----------
+    test_data : 2d array, size (S, N)
+        New, independent data set to be predicted based on trained c-means
+        from ``cmeans``. N is the number of data sets; S is the number of
+        features within each sample vector.
+    cntr_trained : 2d array, size (S, c)
+        Location of trained centers from prior training c-means.
+    m : float
+        Array exponentiation applied to the membership function u_old at each
+        iteration, where U_new = u_old ** m.
+    error : float
+        Stopping criterion; stop early if the norm of (u[p] - u[p-1]) < error.
+    maxiter : int
+        Maximum number of iterations allowed.
+    metric: string
+        By default is set to euclidean. Passes any option accepted by
+        ``scipy.spatial.distance.cdist``.
+    init : 2d array, size (S, N)
+        Initial fuzzy c-partitioned matrix. If none provided, algorithm is
+        randomly initialized.
+    seed : int
+        If provided, sets random seed of init. No effect if init is
+        provided. Mainly for debug/testing purposes.
+    Returns
+    -------
+    u : 2d array, (S, N)
+        Final fuzzy c-partitioned matrix.
+    u0 : 2d array, (S, N)
+        Initial guess at fuzzy c-partitioned matrix (either provided init or
+        random guess used if init was not provided).
+    d : 2d array, (S, N)
+        Final Euclidian distance matrix.
+    jm : 1d array, length P
+        Objective function history.
+    p : int
+        Number of iterations run.
+    fpc : float
+        Final fuzzy partition coefficient.
+    Notes
+    -----
+    Ross et al. [1]_ did not include a prediction algorithm to go along with
+    fuzzy c-means. This prediction algorithm works by repeating the clustering
+    with fixed centers, then efficiently finds the fuzzy membership at all
+    points.
+    References
+    ----------
+    .. [1] Ross, Timothy J. Fuzzy Logic With Engineering Applications, 3rd ed.
+           Wiley. 2010. ISBN 978-0-470-74376-8 pp 352-353, eq 10.28 - 10.35.
+    """
+    c = cntr_trained.shape[0]
+
+    # Setup u0
+    if init is None:
+        if seed is not None:
+            np.random.seed(seed=seed)
+        n = test_data.shape[1]
+        u0 = np.random.rand(c, n)
+        u0 = normalize_columns(u0)
+        init = u0.copy()
+    u0 = init
+    u = np.fmax(u0, np.finfo(np.float64).eps)
+
+    # Initialize loop parameters
+    jm = np.zeros(0)
+    p = 0
+
+    # Main cmeans loop
+    while p < maxiter - 1:
+        u2 = u.copy()
+        [u, Jjm, d] = _cmeans_predict0(test_data, cntr_trained, u2, c, m, metric)
+        jm = np.hstack((jm, Jjm))
+        p += 1
+
+        # Stopping rule
+        if np.linalg.norm(u - u2) < error:
+            break
+
+    # Final calculations
+    error = np.linalg.norm(u - u2)
+    fpc = _fp_coeff(u)
+
+    return u, u0, d, jm, p, fpc
+
