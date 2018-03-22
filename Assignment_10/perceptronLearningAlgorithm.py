@@ -24,8 +24,10 @@ def perceptronLearningAlg(data,labels,eta,nIterations):
         iter += 1
         for i in range(nPts):
             activation =  data[i,:]@weights
-            activation = (activation>0)
-            if (activation-labels[i])!=0:
+            activation = (activation>0) # add a condition to separate the classes
+            if activation != True:
+                activation = -1
+            if (activation-labels[i])!= 0: #0 with original labels {0,1}
                 plt.cla()
                 weights-=eta*data[i,:]*(activation-labels[i])
                 error += 1
@@ -52,7 +54,7 @@ if __name__ == '__main__':
 	data2 = np.array(generateMVNRandData(Npts, mu2, .1))
 	data2 = np.hstack((np.ones((Npts,1)),data2))
 	data  = np.vstack(( data1, data2))
-	labels= np.hstack((np.ones(Npts), np.zeros(Npts)))
+	labels= np.hstack((1*np.ones(Npts), -1*(np.ones(Npts)))) # for {-1,1} use activation 1
 
 	plt.scatter(data[:,1],data[:,2], c=labels, linewidth=0)
 	plt.pause(2)
