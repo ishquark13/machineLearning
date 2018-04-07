@@ -10,6 +10,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from random import shuffle
 
 
 class mlp:
@@ -93,6 +94,7 @@ class mlp:
             #np.random.shuffle(change)
             #inputs = inputs[change,:]
             #targets = targets[change,:]
+            
         plt.plot(error,'-o')
         plt.xlabel('Iteration n')
         plt.ylabel('Cost Function J(n)')
@@ -101,7 +103,69 @@ class mlp:
         plt.plot(np.arange(0,niterations+1),np.zeros(niterations+1),'--r')
         plt.show()
         return self.weights1, self.weights2
-        
+    
+    def mlptrain_online(self,inputs,targets,eta,niterations):
+        """ Train the thing online """    
+        # Add the inputs that match the bias node
+        fig   = plt.figure()
+        inputs = np.concatenate((inputs,-np.ones((self.ndata,1))),axis=1)
+        change = np.arange(self.ndata)
+    
+        updatew1 = np.zeros((np.shape(self.weights1)))
+        updatew2 = np.zeros((np.shape(self.weights2)))
+            
+        error = np.zeros(niterations)
+        for n in range(niterations):
+            
+            np.random.shuffle(change)
+            inputs = inputs[change,:]
+            targets = targets[change,:]
+            self.outputs = self.mlpfwd(inputs)
+
+            error[n] = 0.5*np.sum((self.outputs-targets)**2)
+
+            if (np.mod(n,100)==0):
+                print("Iteration: ",n, " Error: ",error[n])  
+                #plt.scatter(n,error[n])
+
+            for i in range(self.ndata):
+
+                # Different types of output neurons
+                if self.outtype == 'linear':
+                    deltao = (self.outputs[i,:] - targets[i,:])
+                elif self.outtype == 'logistic':
+                    deltao = self.beta * (self.outputs[i,:] - targets[i,:]) * self.outputs[i,:] * (1.0 - self.outputs[i,:])
+                elif self.outtype == 'softmax':
+                    deltao = (self.outputs[i,:] - targets[i,:]) * (self.outputs[i,:] * (-self.outputs[i,:]) + self.outputs[i,:]) 
+                else:
+                    print("error")
+                
+                deltah = self.hidden*self.beta*(1.0-self.hidden)*(np.dot(deltao,np.transpose(self.weights2)))
+                deltah_reshape = np.reshape(deltah[i,:-1],(2,1))
+
+                sample = np.reshape(inputs[i,:],(5,1))
+                hidden_reshape = np.reshape(self.hidden[i,:],(3,1))
+                deltao_reshape = np.transpose(np.reshape(deltao,(3,1)))
+                          
+                updatew1 = eta*(np.dot((sample),(np.transpose(deltah_reshape)))) + self.momentum*updatew1
+                updatew2 = eta*(np.dot((hidden_reshape),(deltao_reshape))) + self.momentum*updatew2
+                self.weights1 -= updatew1
+                self.weights2 -= updatew2
+                    
+                # Randomise order of inputs (not necessary for matrix-based calculation)
+                #np.random.shuffle(change)
+                #inputs = inputs[change,:]
+                #targets = targets[change,:]
+
+        plt.plot(error,'-o')
+        plt.xlabel('Iteration n')
+        plt.ylabel('Cost Function J(n)')
+        plt.title('Learning Curve')
+        plt.legend(["Learning rate = "+ str(eta)])
+        plt.plot(np.arange(0,niterations+1),np.zeros(niterations+1),'--r')
+        plt.show()
+        return self.weights1, self.weights2
+
     def mlpfwd(self,inputs):
         """ Run the network forward """
 

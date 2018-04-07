@@ -72,7 +72,7 @@ testt = target[3::4]
 # Train the network
 import mlp
 net = mlp.mlp(train,traint,2,outtype='logistic')
-w1,w2=net.mlptrain(train,traint,.05,5001)
+w1,w2=net.mlptrain_online(train,traint,.05,5001)
 print("Weights (including bias) from Input to Hidden Layer (Ninput + 1 x Nhidden)")
 print(w1)
 print("Weights (including bias) from Hidden to Output Layer (Nhidden + 1 x Noutput)")
